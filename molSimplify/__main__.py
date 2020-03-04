@@ -34,6 +34,7 @@ sys.setdlopenflags(flags)
 from .Scripts.inparse import *
 from .Scripts.generator import *
 from molSimplify.Classes.globalvars import *
+from molSimplify.Scripts.molSimplify_io import copy_to_custom_path
 
 globs = globalvars()
 ## Basic help description string
@@ -122,6 +123,7 @@ def main(args=None):
     if not globs.custom_path or not os.path.exists(str(globs.custom_path)):
         print('First time use, will copy data into ~/.metalmix')
         globs.add_custom_path(os.path.expanduser('~/.metalmix'))
+        copy_to_custom_path()
 
     if args is None:
         args = sys.argv[1:]
