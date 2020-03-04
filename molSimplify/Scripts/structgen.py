@@ -12,8 +12,7 @@
 from molSimplify.Scripts.geometry import *
 from molSimplify.Scripts.distgeom import *
 from molSimplify.Scripts.molSimplify_io import *
-if not sys.version_info >= (3,0):
-    from molSimplify.Scripts.nn_prep import *
+from molSimplify.Scripts.nn_prep import *
 from molSimplify.Classes.globalvars import *
 from molSimplify.Classes.rundiag import *
 from molSimplify.Classes import globalvars

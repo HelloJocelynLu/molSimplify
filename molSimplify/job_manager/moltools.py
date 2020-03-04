@@ -115,7 +115,7 @@ def apply_geo_check(job_outfile_path, geometry):
                               'oct_angle_devi_max': 15, 'max_del_sig_angle': 30,
                               'dist_del_eq': 0.35, 'dist_del_all': 1,
                               'devi_linear_avrg': 20, 'devi_linear_max': 28}
-            outer_dict_flags = mol.dict_oct_check_st.keys()
+            outer_dict_flags = list(mol.dict_oct_check_st.keys())
             final_dict = dict()
             for key in outer_dict_flags:
                 final_dict[key] = geo_check_dict
@@ -133,7 +133,7 @@ def apply_geo_check(job_outfile_path, geometry):
                               'oct_angle_devi_max': 25, 'max_del_sig_angle': 50,
                               'dist_del_eq': 0.35, 'dist_del_all': 1,
                               'devi_linear_avrg': 20, 'devi_linear_max': 28}
-            outer_dict_flags = mol.dict_oct_check_st.keys()
+            outer_dict_flags = list(mol.dict_oct_check_st.keys())
             final_dict = dict()
             for key in outer_dict_flags:
                 final_dict[key] = geo_check_dict
@@ -164,7 +164,7 @@ def get_metal_and_bonded_atoms(job_outfile, geometry=None):
     if geometry in ['Oct', 'oct', 'Octahedral', 'octahedral']:
         bonded_atom_indices = mol.getBondedAtomsOct(metal_index)
     else:
-        print('Warning, generic getBondedAtoms() used for: ' + job_outfile + '. Check behavior')
+        print(('Warning, generic getBondedAtoms() used for: ' + job_outfile + '. Check behavior'))
         bonded_atom_indices = mol.getBondedAtoms(metal_index)
 
     return metal_index, bonded_atom_indices

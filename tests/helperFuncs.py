@@ -71,11 +71,11 @@ def getAllLigands(xyz):
                 newlig.addAtom(mymol3d.atoms[i])
                 ligAtoms.append(i)
             ligands.append(newlig)
-    print("Ligand analysis of xyz file: ", xyz)
-    print("There are ", len(ligands), " ligand(s) bonded with metal center\
-            ", mm, " in the complex")
+    print(("Ligand analysis of xyz file: ", xyz))
+    print(("There are ", len(ligands), " ligand(s) bonded with metal center\
+            ", mm, " in the complex"))
     for i in range(0, len(ligands)):
-        print("Number of atoms in ligand # ", i, " : ", ligands[i].natoms)
+        print(("Number of atoms in ligand # ", i, " : ", ligands[i].natoms))
     return ligands
 
 
@@ -102,7 +102,7 @@ def compareNumAtoms(xyz1, xyz2):
     mol2.readfromxyz(xyz1)
     # Compare number of atoms
     passNumAtoms = (mol1.natoms == mol2.natoms)
-    print("Pass total number of atoms check: ", passNumAtoms)
+    print(("Pass total number of atoms check: ", passNumAtoms))
     return passNumAtoms
 
 
@@ -120,10 +120,10 @@ def compareMLBL(xyz1, xyz2, thresh):
     passMLBL = True
     for i in range(0, len(bl1)):
         if not fuzzy_equal(bl1[i], bl2[i], thresh):
-            print("Error! Metal-Ligand bondlength mismatch for bond # ", i)
+            print(("Error! Metal-Ligand bondlength mismatch for bond # ", i))
             passMLBL = False
-    print("Pass metal-ligand bond length check: ", passMLBL)
-    print("Threshold for bondlength difference: ", thresh)
+    print(("Pass metal-ligand bond length check: ", passMLBL))
+    print(("Threshold for bondlength difference: ", thresh))
     return passMLBL
 
 
@@ -139,23 +139,23 @@ def compareLG(xyz1, xyz2, thresh):
         pssLG = False
         return passLG
     for i in range(0, len(ligs1)):
-        print("Checking geometry for ligand # ", i)
+        print(("Checking geometry for ligand # ", i))
         ligs1[i], U, d0, d1 = kabsch(ligs1[i], ligs2[i])
         rmsd12 = ligs1[i].rmsd(ligs2[i])
         print(('rmsd is ' + '{0:.2f}'.format(rmsd12)))
         if rmsd12 > thresh:
             passLG = False
             return passLG
-    print("Pass ligand geometry check: ", passLG)
-    print("Threshold for ligand geometry RMSD difference: ", thresh)
+    print(("Pass ligand geometry check: ", passLG))
+    print(("Threshold for ligand geometry RMSD difference: ", thresh))
     return passLG
 
 
 def compareOG(xyz1, xyz2, thresh):
     print("Checking the overall geometry")
     passOG = fuzzy_compare_xyz(xyz1, xyz2, thresh)
-    print("Pass overall geometry check: ", passOG)
-    print("Threshold for overall geometry check: ", thresh)
+    print(("Pass overall geometry check: ", passOG))
+    print(("Threshold for overall geometry check: ", thresh))
     return passOG
 
 
@@ -228,7 +228,7 @@ def parse4test(infile, tmpdir, isMulti=False):
         newdata += "-name " + name + "\n"
     print(newdata)
     f.write(newdata)
-    print("Input file parsed for test is located: ", newname)
+    print(("Input file parsed for test is located: ", newname))
     return newname
 
 
@@ -259,7 +259,7 @@ def parse4testNoFF(infile, tmpdir):
         newdata += "-name " + newname + "\n"
         print(newdata)
         f.write(newdata)
-        print("Input file parsed for no FF test is located: ", fullnewname)
+        print(("Input file parsed for no FF test is located: ", fullnewname))
     return fullnewname
 
 
@@ -276,7 +276,7 @@ def report_to_dict(lines):
         except:
             d[key] = str(val.strip('[]'))
     ## extra proc for ANN_bond list:
-    if 'ANN_bondl' in d.keys():
+    if 'ANN_bondl' in list(d.keys()):
         d['ANN_bondl'] = [float(i.strip('[]')) for i in d['ANN_bondl'].split()]
     return (d)
 
@@ -301,13 +301,13 @@ def compare_report_new(report1, report2):
             print(('missing: ' + str(report2)))
     if Equal:
 
-        for k in dict1.keys():
+        for k in list(dict1.keys()):
             if Equal:
                 val1 = dict1[k]
-                if not k in dict2.keys():
+                if not k in list(dict2.keys()):
                     Equal = False
-                    print("Report compare failed for ", report1, report2)
-                    print("keys " + str(k) + " not present in " + str(report2))
+                    print(("Report compare failed for ", report1, report2))
+                    print(("keys " + str(k) + " not present in " + str(report2)))
                 else:
                     val2 = dict2[k]
 
@@ -318,8 +318,8 @@ def compare_report_new(report1, report2):
                         else:
                             Equal = (val1 == val2)
                         if not Equal:
-                            print("Report compare failed for ", report1, report2)
-                            print("Values don't match for key", k)
+                            print(("Report compare failed for ", report1, report2))
+                            print(("Values don't match for key", k))
                             print([val1, val2])
                     else:
                         # loop over ANN bonds?
@@ -327,8 +327,8 @@ def compare_report_new(report1, report2):
                         for ii, v in enumerate(val1):
                             Equal = fuzzy_equal(v, val2[ii], 1e-4)
                         if not Equal:
-                            print("Report compare failed for ", report1, report2)
-                            print("Values don't match for key", k)
+                            print(("Report compare failed for ", report1, report2))
+                            print(("Values don't match for key", k))
                             print([val1, val2])
             else:
                 break
@@ -344,18 +344,18 @@ def checkMultiFileGen(myjobdir, refdir):
     passMultiFileCheck = True
     myfiles = [i for i in os.listdir(myjobdir) if ".xyz" in i]
     reffiles = [i for i in os.listdir(refdir) if ".xyz" in i]
-    print("Run directory:", myjobdir)
-    print("Generated xyz:", myfiles)
-    print("Reference directory:", refdir)
-    print("Ref xyz:", reffiles)
-    print("Generated ", len(myfiles), " files, expecting ", len(reffiles))
+    print(("Run directory:", myjobdir))
+    print(("Generated xyz:", myfiles))
+    print(("Reference directory:", refdir))
+    print(("Ref xyz:", reffiles))
+    print(("Generated ", len(myfiles), " files, expecting ", len(reffiles)))
     if len(myfiles) != len(reffiles):
         passMultiFileCheck = False
         print("Error! Numbers don't match!")
     else:
         for ref in reffiles:
             if ref not in myfiles:
-                print("xyz file ", ref, " is missing in generated file folder")
+                print(("xyz file ", ref, " is missing in generated file folder"))
                 passMultiFileCheck = False
     return [passMultiFileCheck, myfiles]
 
@@ -366,7 +366,7 @@ def compare_qc_input(inp, inp_ref):
         return passQcInputCheck
     elif os.path.exists(inp_ref) and (not os.path.exists(inp)):
         passQcInputCheck = False
-        print(inp + "not found")
+        print((inp + "not found"))
         return passQcInputCheck
 
     data1 = open(inp, 'r').read()
@@ -406,21 +406,21 @@ def runtest(tmpdir, name, threshMLBL, threshLG, threshOG):
     ref_qcin = resource_filename(Requirement.parse(
         "molSimplify"), "tests/refs/" + name + ".qcin")
 
-    print("Test input file: ", newinfile)
-    print("Test output files are generated in ", myjobdir)
-    print("Output xyz file: ", output_xyz)
+    print(("Test input file: ", newinfile))
+    print(("Test output files are generated in ", myjobdir))
+    print(("Output xyz file: ", output_xyz))
     pass_xyz = compareGeo(output_xyz, ref_xyz, threshMLBL, threshLG, threshOG)
     [passNumAtoms, passMLBL, passLG, passOG] = pass_xyz
     pass_report = compare_report_new(output_report, ref_report)
-    print("Reference xyz file: ", ref_xyz)
-    print("Test report file: ", output_report)
-    print("Reference report file: ", ref_report)
-    print("Reference xyz status: ", pass_xyz)
-    print("Reference report status: ", pass_report)
+    print(("Reference xyz file: ", ref_xyz))
+    print(("Test report file: ", output_report))
+    print(("Reference report file: ", ref_report))
+    print(("Reference xyz status: ", pass_xyz))
+    print(("Reference report status: ", pass_report))
     pass_qcin = compare_qc_input(output_qcin, ref_qcin)
-    print("Reference qc input file: ", ref_qcin)
-    print("Test qc input file:", output_qcin)
-    print("Qc input status:", pass_qcin)
+    print(("Reference qc input file: ", ref_qcin))
+    print(("Test qc input file:", output_qcin))
+    print(("Qc input status:", pass_qcin))
     return [passNumAtoms, passMLBL, passLG, passOG, pass_report, pass_qcin]
 
 
@@ -494,22 +494,22 @@ def runtestNoFF(tmpdir, name, threshMLBL, threshLG, threshOG):
             "molSimplify"), "tests/refs/" + newname + ".report")
         ref_qcin = resource_filename(Requirement.parse(
             "molSimplify"), "tests/refs/" + name + ".qcin")
-        print("Test input file: ", newinfile)
-        print("Test output files are generated in ", myjobdir)
-        print("Output xyz file: ", output_xyz)
+        print(("Test input file: ", newinfile))
+        print(("Test output files are generated in ", myjobdir))
+        print(("Output xyz file: ", output_xyz))
         pass_xyz = compareGeo(output_xyz, ref_xyz,
                               threshMLBL, threshLG, threshOG)
         [passNumAtoms, passMLBL, passLG, passOG] = pass_xyz
         pass_report = compare_report_new(output_report, ref_report)
-        print("Reference xyz file: ", ref_xyz)
-        print("Test report file: ", output_report)
-        print("Reference report file: ", ref_report)
-        print("Reference xyz status: ", pass_xyz)
-        print("Reference report status: ", pass_report)
+        print(("Reference xyz file: ", ref_xyz))
+        print(("Test report file: ", output_report))
+        print(("Reference report file: ", ref_report))
+        print(("Reference xyz status: ", pass_xyz))
+        print(("Reference report status: ", pass_report))
         pass_qcin = compare_qc_input(output_qcin, ref_qcin)
-        print("Reference qc input file: ", ref_qcin)
-        print("Test qc input file:", output_qcin)
-        print("Qc input status:", pass_qcin)
+        print(("Reference qc input file: ", ref_qcin))
+        print(("Test qc input file:", output_qcin))
+        print(("Qc input status:", pass_qcin))
     return [passNumAtoms, passMLBL, passLG, passOG, pass_report, pass_qcin]
 
 
@@ -521,8 +521,8 @@ def runtestMulti(tmpdir, name, threshMLBL, threshLG, threshOG):
     # Need to make the ligand file visible to the input file
     startgen(args, False, False)
     myjobdir = jobdir(infile) + "/"
-    print("Test input file: ", newinfile)
-    print("Test output files are generated in ", myjobdir)
+    print(("Test input file: ", newinfile))
+    print(("Test output files are generated in ", myjobdir))
     refdir = resource_filename(Requirement.parse(
         "molSimplify"), "tests/refs/" + name + "/")
     [passMultiFileCheck, myfiles] = checkMultiFileGen(myjobdir, refdir)
@@ -538,10 +538,10 @@ def runtestMulti(tmpdir, name, threshMLBL, threshLG, threshOG):
                 ref_xyz = refdir + f
                 output_report = myjobdir + r
                 ref_report = refdir + r
-                print("Output xyz file: ", output_xyz)
-                print("Reference xyz file: ", ref_xyz)
-                print("Test report file: ", output_report)
-                print("Reference report file: ", ref_report)
+                print(("Output xyz file: ", output_xyz))
+                print(("Reference xyz file: ", ref_xyz))
+                print(("Test report file: ", output_report))
+                print(("Reference report file: ", ref_report))
                 pass_xyz = compareGeo(
                     output_xyz, ref_xyz, threshMLBL, threshLG, threshOG)
                 [passNumAtoms, passMLBL, passLG, passOG] = pass_xyz

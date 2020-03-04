@@ -114,8 +114,8 @@ def list_active_jobs(ids=False, home_directory=False, parse_bundles=False):
         for line_index in line_indices_of_jobnames:
             job_ids.append(int(job_report.lines[line_index - 1].split()[0]))
         if len(names) != len(job_ids):
-            print(len(names))
-            print(len(job_ids))
+            print((len(names)))
+            print((len(job_ids)))
             raise Exception('An error has occurred in listing active jobs!')
         return names, job_ids
 
@@ -434,7 +434,7 @@ def pull_optimized_geos(PATHs=[]):
         homedir = os.path.split(scr_path)[0]
         initial_xyz = glob.glob(os.path.join(homedir, '*.xyz'))
         if len(initial_xyz) != 1:
-            print('Name could not be identified for: ' + Path)
+            print(('Name could not be identified for: ' + Path))
             print('Naming with a random 6 digit number')
             name = str(np.random.randint(999999)) + '_optimized.xyz'
         else:
@@ -461,7 +461,7 @@ def bundle_jobscripts(home_directory, jobscript_paths, max_bundle_size=10):
             bundles.append(jobscript_paths[max_bundle_size * (i + 1):])
     else:  # Triggers when there are fewere jobscripts than the bundle size
         bundles = [jobscript_paths]
-    print('Bundling ' + str(len(jobscript_paths)) + ' short jobs into ' + str(len(bundles)) + ' jobscript(s)')
+    print(('Bundling ' + str(len(jobscript_paths)) + ' short jobs into ' + str(len(bundles)) + ' jobscript(s)'))
 
     output_jobscripts = []
     for bundle in bundles:

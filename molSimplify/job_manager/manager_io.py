@@ -138,7 +138,7 @@ def read_outfile(outfile_path, short_ouput=False, long_output=True):
                     orbital_occupation = dict()
                     for line in nbo_lines:
                         key = line.split()[1] + '_' + line.split()[2] + '_' + line.split()[3]
-                        if key in orbital_occupation.keys():
+                        if key in list(orbital_occupation.keys()):
                             raise Exception(outfile_path + ' ' + key + ': Same key found twice in nbo parsing!')
                         if len(line.split()) > 8:  # for open shell systems
                             orbital_occupation[key] = [float(line.split()[-3]), float(line.split()[-1])]
@@ -571,7 +571,7 @@ def write_orca_input(infile_dictionary):
         raise Exception('ORCA input does not support 2 different levelshift values for openshell systems! ' + str(
             infile['levelshifta']) + ' ' + str(infile['levelshiftb']))
     for element in ['constraints', 'dispersion', 'hfx', 'multibasis', 'convergence_thresholds', 'guess']:
-        if element in infile.keys():
+        if element in list(infile.keys()):
             if infile[element]:
                 raise Exception('Keyword (' + element + ') not yet implemented for orca in the job manager')
 

@@ -23,7 +23,7 @@ def kill_jobs(kill_names, message1='Killing job: ', message2=' early'):
     jobs_to_kill = [[name, id_] for name, id_ in active_jobs if name in kill_names]
 
     for name, id_ in jobs_to_kill:
-        print(message1 + name + message2)
+        print((message1 + name + message2))
         tools.call_bash('qdel ' + str(id_))
 
 

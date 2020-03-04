@@ -29,7 +29,7 @@ def save_scr(outfile_path, rewrite_inscr=True):
     root = './'
     scr_path = os.path.join(root, 'scr')
 
-    print("scr_path: ", scr_path)
+    print(("scr_path: ", scr_path))
     if os.path.isdir(scr_path):
         # extract the optimized geometry, if it exists
         optim = glob.glob(os.path.join(scr_path, 'optim.xyz'))
@@ -52,7 +52,7 @@ def save_scr(outfile_path, rewrite_inscr=True):
         # archive the scr under a new name so that we can write a new one
         old_scrs = glob.glob(scr_path + '_*')
         old_scrs = [int(i[-1]) for i in old_scrs]
-        print("old_scrs: ", old_scrs)
+        print(("old_scrs: ", old_scrs))
         if len(old_scrs) > 0:
             new_scr = str(max(old_scrs) + 1)
         else:
@@ -125,7 +125,7 @@ def reset(outfile_path):
     pickle_path = outfile_path.rsplit('.', 1)[0] + '.pickle'
     if os.path.isfile(pickle_path):
 
-        print('Resetting run: ' + os.path.split(outfile_path)[-1].rsplit('.', 1)[0])
+        print(('Resetting run: ' + os.path.split(outfile_path)[-1].rsplit('.', 1)[0]))
         old_path = os.path.join(os.path.split(outfile_path)[0], 'pre_reset')
         if not os.path.isdir(old_path):
             os.mkdir(old_path)
@@ -178,7 +178,7 @@ def reset(outfile_path):
                 shutil.move(path,
                             os.path.join(old_path, str(np.random.randint(999999999)) + '_' + os.path.split(path)[-1]))
             except:
-                print('No file found for: ' + path)
+                print(('No file found for: ' + path))
 
         # Rewrite the .xyz, .in, jobscript, and .out file to be the same as they were after the first run
         history = resub_history()

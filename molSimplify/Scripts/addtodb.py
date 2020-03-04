@@ -45,7 +45,7 @@ def addtoldb(smimol, sminame, smident, smicat, smigrps, smictg, ffopt):
     lipath = globs.custom_path + "/Ligands/ligands.dict"
     licores = readdict(lipath)
     ligands_folder = globs.custom_path + "/Ligands/"
-    print("ligands_folder is : " + str(ligands_folder))
+    print(("ligands_folder is : " + str(ligands_folder)))
     # check if ligand exists
     if sminame in list(licores.keys()):
         emsg = 'Ligand '+sminame+' already existing in ligands database.'
@@ -66,9 +66,9 @@ def addtoldb(smimol, sminame, smident, smicat, smigrps, smictg, ffopt):
         css = ' '.join(cs)
         # convert to unicode
         smimol = unicodedata.normalize(
-            'NFKD', unicode(smimol)).encode('ascii', 'ignore')
+            'NFKD', str(smimol)).encode('ascii', 'ignore')
         sminame = unicodedata.normalize(
-            'NFKD', unicode(sminame)).encode('ascii', 'ignore')
+            'NFKD', str(sminame)).encode('ascii', 'ignore')
         if '~' in smimol:
             smimol = smimol.replace('~', os.expanduser('~'))
         # convert ligand from smiles/file
@@ -78,12 +78,12 @@ def addtoldb(smimol, sminame, smident, smicat, smigrps, smictg, ffopt):
         lig.convert2mol3D()  # convert to mol3D
 
         shortname = sminame
-        print("smimol is "+str(smimol))
-        print("sminame is "+str(sminame))
+        print(("smimol is "+str(smimol)))
+        print(("sminame is "+str(sminame)))
         # sanitize ff options:
         if not ffopt in ["A", "B", "BA"]:
-            print('warning: incompatible ffopt choice. Options are ' +
-                  str(["A", "B", "BA", "N"]))
+            print(('warning: incompatible ffopt choice. Options are ' +
+                  str(["A", "B", "BA", "N"])))
             sys.exit(1)
 
         # new entry for dictionary

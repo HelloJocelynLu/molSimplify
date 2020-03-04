@@ -6,7 +6,7 @@
 ######## Defines methods for assembling    ###############
 ########     RACs from lists of ligands    ###############
 ##########################################################
-from __future__ import print_function
+
 import numpy as np
 import sys
 
@@ -279,19 +279,19 @@ def create_OHE(descriptor_names,descriptors, metal,oxidation_state):
 #  @return descriptors updated RACs
 def append_descriptors(descriptor_names,descriptors,list_of_names,list_of_props,prefix,suffix):
     try:
-        basestring
+        str
     except NameError:
-        basestring = str
+        str = str
 
     for names in list_of_names:
-        if not isinstance(names, basestring):
+        if not isinstance(names, str):
             names = ["-".join([prefix,str(i),suffix]) for i in names]
             descriptor_names += names
         else:
             names = "-".join([prefix,str(names),suffix])
             descriptor_names.append(names)
     for values in list_of_props:
-        if not isinstance(names, basestring):
+        if not isinstance(names, str):
             descriptors.extend(values)
         else:
             descriptors.append(values)
@@ -309,9 +309,9 @@ def append_descriptors(descriptor_names,descriptors,list_of_names,list_of_props,
 def append_descriptor_derivatives(descriptor_derivative_names,descriptor_derivatives, mat_of_names,dmat,prefix,suffix):
 
     try:
-        basestring
+        str
     except NameError:
-        basestring = str
+        str = str
 
     for names in mat_of_names:
         jnames = ["-".join([prefix,str(i),suffix]) for i in names]

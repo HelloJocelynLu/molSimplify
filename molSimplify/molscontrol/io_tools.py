@@ -64,8 +64,8 @@ def obtain_jobinfo(xyzfile, frame=-1, txt=False):
     # eq_con = np.squeeze(np.array(eq_con).reshape(4, -1))
     _, _, _, _, _, _, _ax_con, _eq_con, _ = ligand_assign_consistent(init_mol, liglist,
                                                                      ligdents, ligcons)
-    print("ax_con: ", _ax_con)
-    print("eq_con: ", _eq_con)
+    print(("ax_con: ", _ax_con))
+    print(("eq_con: ", _eq_con))
     job_info = {}
     info_list = ['ax_con', 'eq_con', 'ax_con_sym', 'eq_con_sym', 'catoms', 'natoms', 'metal_ind']
     eq_con, ax_con = [], []
