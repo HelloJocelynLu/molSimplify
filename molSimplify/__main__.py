@@ -123,6 +123,7 @@ def main(args=None):
     if not globs.custom_path or not os.path.exists(str(globs.custom_path)):
         print('First time use, need to set a custom path. Please enter a writeable file path:')
         new_path = eval(input('path?(~/.molsimplify/)'))
+        if not new_path: new_path = os.path.expanduser("~/.molSimplify/")
         globs.add_custom_path(new_path)
         copy_to_custom_path()
 
