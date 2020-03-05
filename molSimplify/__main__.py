@@ -121,8 +121,9 @@ def main(args=None):
     else:
         print('TensorFlow connection failed')
     if not globs.custom_path or not os.path.exists(str(globs.custom_path)):
-        print('First time use, will copy data into ~/.metalmix')
-        globs.add_custom_path(os.path.expanduser('~/.metalmix'))
+        print('First time use, need to set a custom path. Please enter a writeable file path:')
+        new_path = eval(input('path?(~/.molsimplify/)'))
+        globs.add_custom_path(new_path)
         copy_to_custom_path()
 
     if args is None:

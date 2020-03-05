@@ -6,10 +6,25 @@ molSimplify is an open source toolkit for the automated, first-principles screen
 ## Note
 
 This repo is forked from hjkgrp/molSimplify and has been adapted to python 3 (Have tested in python 3.6 and python 3.7)
+The data path setting would be triggered at first time running.
+
+## Reqiurements
+
+    * openbabel
+    * numpy
+    * scipy
+    * pyyaml
+    * scikit-learn
+    * tensorflow (optional)
+    * keras (optional)
 
 ## Installation
 
-molSimplify is written in Python using the [Open Babel Toolkit](http://openbabel.org). The graphical user interface is written in PyQt5. We currently recommend installation via the [Conda](https://conda.io/docs/) package management system. Specific instructions are provided at the [Kulik group website](http://hjkgrp.mit.edu/content/new-installation-option-molsimplify). Additional installation options, including instructions for building the dependencies from source are provide in the [user guide](./molSimplify/Docs/Userguide/USER_GUIDE.pdf).
+```bash
+    $ git clone https://github.com/HelloJocelynLu/molSimplify.git
+    $ cd molSimplify/
+    $ python setup.py install
+```
 
 ## Tutorials
 
