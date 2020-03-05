@@ -70,8 +70,8 @@ def call_bash(string, error=False, version=1):
     out, err = p.communicate()
 
     if sys.version_info > (3,0):
-        out = out.decode('utf-8')
-        err = err.decode('utf-8')
+        out = out
+        err = err
 
     out = out.split('\n')
     if out[-1] == '':
