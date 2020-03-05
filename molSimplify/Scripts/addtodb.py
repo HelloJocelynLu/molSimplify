@@ -66,9 +66,9 @@ def addtoldb(smimol, sminame, smident, smicat, smigrps, smictg, ffopt):
         css = ' '.join(cs)
         # convert to unicode
         smimol = unicodedata.normalize(
-            'NFKD', str(smimol)).encode('ascii', 'ignore')
+            'NFKD', str(smimol)).encode('ascii', 'ignore').decode()
         sminame = unicodedata.normalize(
-            'NFKD', str(sminame)).encode('ascii', 'ignore')
+            'NFKD', str(sminame)).encode('ascii', 'ignore').decode()
         if '~' in smimol:
             smimol = smimol.replace('~', os.expanduser('~'))
         # convert ligand from smiles/file
@@ -152,7 +152,7 @@ def addtocdb(smimol, sminame, smicat):
         css = ' '.join(cs)
         # convert to unicode
         smimol = unicodedata.normalize(
-            'NFKD', smimol).encode('ascii', 'ignore')
+            'NFKD', smimol).encode('ascii', 'ignore').decode()
         if '~' in smimol:
             smimol = smimol.replace('~', os.expanduser('~'))
         # convert ligand from smiles/file
@@ -208,9 +208,9 @@ def addtobdb(smimol, sminame):
     else:
         # convert to unicode
         smimol = unicodedata.normalize(
-            'NFKD', smimol).encode('ascii', 'ignore')
+            'NFKD', smimol).encode('ascii', 'ignore').decode()
         sminame = unicodedata.normalize(
-            'NFKD', sminame).encode('ascii', 'ignore')
+            'NFKD', sminame).encode('ascii', 'ignore').decode()
         if '~' in smimol:
             smimol = smimol.replace('~', os.expanduser('~'))
         # convert ligand from smiles/file
@@ -273,7 +273,7 @@ def removefromDB(sminame, ropt):
     bind_folder = globs.custom_path + "/Bind/"
 
     # convert to unicode
-    sminame = unicodedata.normalize('NFKD', sminame).encode('ascii', 'ignore')
+    sminame = unicodedata.normalize('NFKD', sminame).encode('ascii', 'ignore').decode()
 
     if ropt == 1:
         # update dictionary

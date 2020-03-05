@@ -1987,7 +1987,7 @@ class mGUI():
                     l = simpleligs[l][0]
                 if isinstance(l, str):
                     ll = unicodedata.normalize(
-                        'NFKD', l).encode('ascii', 'ignore')
+                        'NFKD', l).encode('ascii', 'ignore').decode()
                 else:
                     ll = l
                 # load ligands as molecules
@@ -2089,7 +2089,7 @@ class mGUI():
             for l in liglist:
                 if isinstance(l, str):
                     ll = unicodedata.normalize(
-                        'NFKD', l).encode('ascii', 'ignore')
+                        'NFKD', l).encode('ascii', 'ignore').decode()
                 else:
                     ll = l
 
