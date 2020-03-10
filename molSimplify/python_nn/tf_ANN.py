@@ -23,9 +23,88 @@ import json
 import pandas as pd
 import glob
 import time
+import scipy
 
 
 ## Functions
+
+def perform_ANN_prediction(RAC_dataframe, predictor_name, RAC_column='RACs'):
+    # Performs a correctly normalized/rescaled prediction for a property specified by predictor_name.
+    # Also calculates latent vector and smallest latent distance from training data.
+    # RAC_dataframe can contain anything (e.g. a database pull) as long as it also contains the required RAC features. 
+    # Predictor_name can be a name like ls_ii, hs_iii, homo, oxo, hat, etc.
+    # Input dataframe must have all RAC features in individual columns, or as dictionaries in a single column specified by `RAC_column`.
+    # Will not execute if RAC features are missing.
+    
+    # Returns: RAC_dataframe with new columns added:
+    ## predictor_name_latent_vector
+    ## predictor_name_min_latent_distance,
+    ## predictor_name_prediction
+    
+    assert type(RAC_dataframe) == pd.DataFrame
+    train_vars = load_ANN_variables(predictor_name)
+    train_mean_x, train_mean_y, train_var_x, train_var_y = load_normalization_data(predictor_name)
+    my_ANN = load_keras_ann(predictor_name)
+
+    # Check if any RAC elements are missing from the provided dataframe
+    missing_labels = [i for i in train_vars if i not in RAC_dataframe.columns]
+
+    if len(missing_labels) > 0:
+        # Try checking if there is anything in the column `RAC_column`. If so, deserialize it and re-run.
+        if RAC_column in RAC_dataframe.columns:
+            deserialized_RACs = pd.DataFrame.from_records(RAC_dataframe[RAC_column].values, index=RAC_dataframe.index)
+            deserialized_RACs = deserialized_RACs.astype(float)
+            RAC_dataframe = RAC_dataframe.join(deserialized_RACs)
+            return perform_ANN_prediction(RAC_dataframe, predictor_name, RAC_column='RACs')
+        else:
+            raise ValueError('Please supply missing variables in your RAC dataframe: %s' % missing_labels)
+    if 'alpha' in train_vars:
+        if any(RAC_dataframe.alpha > 1):
+            raise ValueError('Alpha is too large - should be between 0 and 1.')
+
+    RAC_subset_for_ANN = RAC_dataframe.loc[:,train_vars].astype(float)
+    normalized_input = data_normalize(RAC_subset_for_ANN, train_mean_x, train_var_x)
+    ANN_prediction = my_ANN.predict(normalized_input)
+    rescaled_output = data_rescale(ANN_prediction, train_mean_y, train_var_y)
+    
+    # Get latent vectors for training data and queried data
+    train_x = load_training_data(predictor_name)
+    train_x = pd.DataFrame(train_x, columns=train_vars).astype(float)
+    get_outputs = K.function([my_ANN.layers[0].input, K.learning_phase()],
+                             [my_ANN.layers[len(my_ANN.layers) - 2].output])
+    normalized_train = data_normalize(train_x, train_mean_x, train_var_x)
+    training_latent = get_outputs([normalized_train, 0])[0]
+    query_latent = get_outputs([normalized_input, 0])[0]
+
+    # Append all results to dataframe
+    results_allocation = [None for i in range(len(RAC_dataframe))]
+    for i in range(len(RAC_dataframe)):
+        results_dict = {}
+        min_latent_distance = min(np.linalg.norm(training_latent - query_latent[i][:], axis=1))
+        results_dict['%s_latent_vector' % predictor_name] = query_latent[i]
+        results_dict['%s_min_latent_distance' % predictor_name] = min_latent_distance
+        output_value = rescaled_output[i]
+        if len(output_value) == 1: # squash array of length 1 to the value it contains
+            output_value = output_value[0]
+        results_dict['%s_prediction' % predictor_name] = output_value
+        results_allocation[i] = results_dict
+    results_df = pd.DataFrame(results_allocation, index=RAC_dataframe.index)
+    RAC_dataframe_with_results = RAC_dataframe.join(results_df)
+    return RAC_dataframe_with_results
+
+def get_error_params(latent_distances, errors):
+    '''
+    Get the maximum-likelihood parameters for an error model N(a+b*(latent_distance)).
+    Inputs: latent_distances (vector), errors (vector)
+    Output: [a, b]
+    '''
+    def log_likelihood(params):
+        a = params[0]
+        b = params[1]
+        return -np.nansum(scipy.stats.norm.logpdf(errors, loc=0, scale=a+latent_distances*b))
+    results = scipy.optimize.minimize(log_likelihood, np.array([0.2, 0.01]), bounds=[(1e-9,None), (1e-9, None)])
+    return results.x
+
 def matrix_loader(path,rownames=False):
     ## loads matrix with rowname option
     if rownames:
@@ -352,8 +431,11 @@ def load_keras_ann(predictor, suffix='model'):
                                                         decay=0.00011224350434148253, lr=0.0006759924688701965),
                              metrics=['mse', 'mae', 'mape'])
     elif predictor in ['oxo', 'hat']:
-        loaded_model.compile(loss="mse", optimizer=Adam(beta_2=0.9637165412871632, beta_1=0.7560951483268549,
-                                                        decay=0.0006651401379502965, lr=0.0007727366541920176),
+        # loaded_model.compile(loss="mse", optimizer=Adam(beta_2=0.9637165412871632, beta_1=0.7560951483268549,
+        #                                                 decay=0.0006651401379502965, lr=0.0007727366541920176),
+        #                      metrics=['mse', 'mae', 'mape']) #decomissioned on 06/20/2019 by Aditya. Using hyperparams from oxo20.
+        loaded_model.compile(loss="mse", optimizer=Adam(lr=0.0012838133056087084,beta_1=0.9811686522122317, 
+                                                        beta_2=0.8264616523572279, decay=0.0005114008091318582),
                              metrics=['mse', 'mae', 'mape'])
     elif predictor == 'oxo20':
         loaded_model.compile(loss="mse", optimizer=Adam(lr=0.0012838133056087084,beta_1=0.9811686522122317, 
@@ -532,10 +614,19 @@ def find_ANN_10_NN_normalized_latent_dist(predictor, latent_space_vector,debug=F
                                  [loaded_model.layers[len(loaded_model.layers) - 2].output])
     latent_space_train = np.squeeze(np.array(get_outputs([norm_train_mat, 0])))
     dist_array = np.linalg.norm(np.subtract(np.squeeze(latent_space_train), np.squeeze(latent_space_vector)),axis=1)
+    # train_dist_array =  np.linalg.norm(np.subtract(np.squeeze(latent_space_train), np.squeeze(latent_space_train)),axis=1)
+    from scipy.spatial import distance_matrix
+    train_dist_array = distance_matrix(latent_space_train,latent_space_train)
+    nearest_10_NN_train = []
+    for j, train_row in enumerate(train_dist_array):
+        nearest_10_NN_train.append(np.sort(np.squeeze(train_row))[0:10])
+    nearest_10_NN_train = np.array(nearest_10_NN_train)
+    avg_traintrain = np.mean(nearest_10_NN_train)
     sorted_dist = np.sort(np.squeeze(dist_array))
+    sorted_indices = np.argsort(np.squeeze(dist_array))
     avg_10_NN_dist = np.mean(sorted_dist[0:10])
-    avg_10_NN_dist /= average_train_train_10NN[predictor]
-    return avg_10_NN_dist
+    norm_avg_10_NN_dist = avg_10_NN_dist/avg_traintrain
+    return norm_avg_10_NN_dist, avg_10_NN_dist, avg_traintrain 
 
 def find_ANN_latent_dist(predictor, latent_space_vector, debug = False):
     # returns scaled euclidean distance to nearest trainning 
@@ -550,6 +641,7 @@ def find_ANN_latent_dist(predictor, latent_space_vector, debug = False):
     min_ind = 0
 
     loaded_model = load_keras_ann(predictor)
+
     if debug:
         print('measuring latent distances:')
         print(('loaded model has  ' + str(

@@ -6,7 +6,7 @@
 #  Dpt of Chemical Engineering, MIT
 
 from .structgen import *
-from molSimplify.Scripts.io import *
+from molSimplify.Scripts.molSimplify_io import *
 from molSimplify.Scripts.jobgen import *
 from molSimplify.Scripts.qcgen import *
 from molSimplify.Scripts.isomers import generateisomers
@@ -22,6 +22,13 @@ from collections import Counter
 from pkg_resources import resource_filename, Requirement
 import openbabel
 
+###################################################################
+### define input for cross-compatibility between python 2 and 3 ###
+###################################################################
+get_input = input
+if sys.version_info[:2] <= (2,7):
+    get_input = raw_input
+    
 #######################################
 ### get subset between list1, list2 ###
 #######################################
@@ -293,8 +300,8 @@ def multigenruns(rundir, args, globs):
                 args.keepHs.append(keepHs_dict[ligand])
 
             print('**************************************************************')
-            print('******************* Generating isomer ' +
-                  str(counter+1) + '! *******************')
+            print(('******************* Generating isomer ' +
+                  str(counter+1) + '! *******************'))
             print('**************************************************************')
             emsg = rungen(rundir, args, fname, globs)
         return emsg
@@ -385,7 +392,7 @@ def draw_supervisor(args, rundir):
         if len(args.substrate) > 1:
             print('Due to technical limitations, we will draw only the first substrate.')
         print('Drawing the substrate.')
-        print(args.substrate[0])
+        print((args.substrate[0]))
         substrate, emsg = substr_load(args.substrate[0])
         substrate.draw_svg(args.substrate[0])
     else:
@@ -498,7 +505,7 @@ def rungen(rundir, args, chspfname, globs):
         if rootcheck and os.path.isdir(rootcheck) and not args.checkdirt and not skip:
             args.checkdirt = True
             if not args.rprompt:
-                flagdir = input('\nDirectory '+rootcheck +
+                flagdir = get_input('\nDirectory '+rootcheck +
                                 ' already exists. Keep both (k), replace (r) or skip (s) k/r/s: ')
                 if 'k' in flagdir.lower():
                     flagdir = 'keep'
@@ -531,13 +538,13 @@ def rungen(rundir, args, chspfname, globs):
             try:
                 os.mkdir(rootcheck)
             except:
-                print('Directory '+rootcheck+' can not be created. Exiting..\n')
+                print(('Directory '+rootcheck+' can not be created. Exiting..\n'))
                 return
             # check for actual directory
         if os.path.isdir(rootdir) and not args.checkdirb and not skip and not args.jobdir:
             args.checkdirb = True
             if not args.rprompt:
-                flagdir = input(
+                flagdir = get_input(
                     '\nDirectory '+rootdir + ' already exists. Keep both (k), replace (r) or skip (s) k/r/s: ')
                 if 'k' in flagdir.lower():
                     flagdir = 'keep'
@@ -642,7 +649,7 @@ def rungen(rundir, args, chspfname, globs):
                     print(strfiles)
                 jobdirs = mlpgen(args, strfiles, rootdir)
             # generate jobscripts
-            if args.jsched and not emsg:
+            if args.jsched and (not emsg) and (not args.reportonly):
                 if args.jsched in 'SBATCH SLURM slurm sbatch':
                     slurmjobgen(args, jobdirs)
                     print('SLURM jobscripts generated!')
@@ -663,7 +670,7 @@ def rungen(rundir, args, chspfname, globs):
                                  rootdir+' was skipped.')
                 qq.setParent(args.gui.wmain)
             else:
-                print('Folder '+rootdir+' was skipped..\n')
+                print(('Folder '+rootdir+' was skipped..\n'))
     return emsg
 
 # ## Transition state generation

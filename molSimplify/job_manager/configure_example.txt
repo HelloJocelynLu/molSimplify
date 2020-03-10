@@ -1,0 +1,18 @@
+#configure file should be named as "configure" and placed in the home directory
+solvent 10.3 78.9
+functionalsSP wpbeh camb3lyp wb97x
+vertEA
+vertIP
+thermo
+dissociation
+hfx_resample
+max_jobs:10
+hard_job_limit:200
+max_resub:5
+levela:0.25
+levelb:0.25
+method:b3lyp
+hfx:0.2
+sleep:1000
+geo_check:bidentate_oct
+job_recovery:[bad_geo,spin_contaminated,scf,thermo_grad_error]

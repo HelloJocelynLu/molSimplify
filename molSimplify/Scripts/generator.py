@@ -33,7 +33,7 @@ import inspect
 import argparse
 import openbabel
 from molSimplify.Scripts.rungen import *
-from molSimplify.Scripts.io import *
+from molSimplify.Scripts.molSimplify_io import *
 from molSimplify.Scripts.inparse import *
 from molSimplify.Scripts.dbinteract import *
 from molSimplify.Scripts.postproc import *
@@ -189,8 +189,8 @@ def startgen(argv, flag, gui):
     elif (args.ligadd):
         print(('adding ' + str(args.ligadd) + ' to ligand database  with name ' +
                args.ligname + ' and connection atom(s) ' + str(args.ligcon)))
-        addtoldb(smimol=args.ligadd.decode('utf-8'), sminame=args.ligname.decode('utf-8'), smident=len(args.ligcon),
-                 smicat=str(args.ligcon).strip('[]').decode('utf-8'), smigrps="custom", smictg="custom", ffopt=args.ligffopt)
+        addtoldb(smimol=args.ligadd, sminame=args.ligname, smident=len(args.ligcon),
+                 smicat=str(args.ligcon).strip('[]'), smigrps="custom", smictg="custom", ffopt=args.ligffopt)
 
     # normal structure generation or transition state building
     else:

@@ -3,9 +3,28 @@
 
 molSimplify is an open source toolkit for the automated, first-principles screening and discovery of new inorganic molecules and intermolecular complexes. molSimplify is developed by the [Kulik Group](http://hjkgrp.mit.edu) in the [Department of Chemical Engineering](http://web.mit.edu/cheme/) at [MIT](http://web.mit.edu). The software can generate a variety of coordination complexes of metals coordinated by ligands in a mono- or multi-dentate fashion. The code can build a coordination complex directly from a central atom or functionalize a more complex structure (e.g. a porphyrin or other metal-ligand complex) by including additional ligands or replacing existing ones. molSimplify also generates inter-molecular complexes for evaluating binding interactions and generating candidate reactants and intermediates for catalyst reaction mechanism screening.
 
+## Note
+
+This repo is forked from hjkgrp/molSimplify and has been adapted to python 3 (Have tested in python 3.6 and python 3.7)
+The data path setting would be triggered at first time running.
+
+## Reqiurements
+
+    * openbabel
+    * numpy
+    * scipy
+    * pyyaml
+    * scikit-learn
+    * tensorflow (optional)
+    * keras (optional)
+
 ## Installation
 
-molSimplify is written in Python using the [Open Babel Toolkit](http://openbabel.org). The graphical user interface is written in PyQt5. We currently recommend installation via the [Conda](https://conda.io/docs/) package management system. Specific instructions are provided at the [Kulik group website](http://hjkgrp.mit.edu/content/new-installation-option-molsimplify). Additional installation options, including instructions for building the dependencies from source are provide in the [user guide](./molSimplify/Docs/Userguide/USER_GUIDE.pdf).
+```bash
+    $ git clone https://github.com/HelloJocelynLu/molSimplify.git
+    $ cd molSimplify/
+    $ python setup.py install
+```
 
 ## Tutorials
 

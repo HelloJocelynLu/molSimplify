@@ -7,7 +7,7 @@
 
 from molSimplify.Scripts.geometry import *
 from molSimplify.Scripts.structgen import *
-from molSimplify.Scripts.io import *
+from molSimplify.Scripts.molSimplify_io import *
 from molSimplify.Scripts.nn_prep import *
 from molSimplify.Classes.globalvars import *
 from molSimplify.Classes.rundiag import *
@@ -286,7 +286,7 @@ def tsgen(mode, args, rootdir, core, substr, compreact, substreact, globs):
     this_diag.write_report(fname+'.report')
     del ts3D
     if sanity:
-        print('WARNING: Generated complex is not good! Minimum distance between atoms:' +
-              "{0:.2f}".format(d0)+'A\n')
-    print('\nIn folder '+pfold+' generated 1 structure(s)!')
+        print(('WARNING: Generated complex is not good! Minimum distance between atoms:' +
+              "{0:.2f}".format(d0)+'A\n'))
+    print(('\nIn folder '+pfold+' generated 1 structure(s)!'))
     return strfiles, emsg, this_diag
